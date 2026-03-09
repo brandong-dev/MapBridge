@@ -109,9 +109,9 @@
       <span id="destinationSubtitle">74192 Q Rd, Holdrege, NE 68949</span>
     </p>
     <div class="button-row">
-      <a id="fallbackLink" class="button" href="https://www.google.com/maps/search/?api=1&query=40.581321427289%2C-99.323015533602">Open directions</a>
-      <a id="googleLink" class="button secondary" href="https://www.google.com/maps/search/?api=1&query=40.581321427289%2C-99.323015533602">Google Maps</a>
-      <a id="appleLink" class="button secondary" href="https://maps.apple.com/?daddr=40.581321427289%2C-99.323015533602">Apple Maps</a>
+      <a id="fallbackLink" class="button" href="https://www.google.com/maps/search/?api=1&query=Gardens%20on%20Q%2C%2074192%20Q%20Rd%2C%20Holdrege%2C%20NE%2068949">Open directions</a>
+      <a id="googleLink" class="button secondary" href="https://www.google.com/maps/search/?api=1&query=Gardens%20on%20Q%2C%2074192%20Q%20Rd%2C%20Holdrege%2C%20NE%2068949">Google Maps</a>
+      <a id="appleLink" class="button secondary" href="https://maps.apple.com/?q=Gardens%20on%20Q%2C%2074192%20Q%20Rd%2C%20Holdrege%2C%20NE%2068949">Apple Maps</a>
     </div>
     <p class="small">If nothing happens automatically, tap the button.</p>
     <noscript class="small">JavaScript is required for automatic routing.</noscript>
@@ -120,9 +120,7 @@
   <script>
     const DEFAULT_DESTINATION = {
       name: "Gardens on Q",
-      query: "74192 Q Rd, Holdrege, NE 68949",
-      lat: 40.581321427289,
-      lng: -99.323015533602
+      query: "Gardens on Q, 74192 Q Rd, Holdrege, NE 68949"
     };
 
     function getDestination() {
@@ -163,15 +161,22 @@
     function getMapUrls(destination) {
       if (Number.isFinite(destination.lat) && Number.isFinite(destination.lng)) {
         const coordinatePair = `${destination.lat},${destination.lng}`;
+        const hasName = typeof destination.name === "string" && destination.name.trim().length > 0;
+        const nameSlug = encodeURIComponent(destination.name.trim()).replace(/%20/g, "+");
+        const zoom = 20;
         return {
-          apple: `https://maps.apple.com/?daddr=${encodeURIComponent(coordinatePair)}`,
-          google: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordinatePair)}`
+          apple: hasName
+            ? `https://maps.apple.com/?q=${encodeURIComponent(destination.name)}&ll=${encodeURIComponent(coordinatePair)}`
+            : `https://maps.apple.com/?q=${encodeURIComponent(coordinatePair)}`,
+          google: hasName
+            ? `https://www.google.com/maps/place/${nameSlug}/@${coordinatePair},${zoom}z`
+            : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordinatePair)}`
         };
       }
 
       const encodedQuery = encodeURIComponent(destination.query);
       return {
-        apple: `https://maps.apple.com/?daddr=${encodedQuery}`,
+        apple: `https://maps.apple.com/?q=${encodedQuery}`,
         google: `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`
       };
     }
