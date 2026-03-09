@@ -109,9 +109,9 @@
       <span id="destinationSubtitle">74192 Q Rd, Holdrege, NE 68949</span>
     </p>
     <div class="button-row">
-      <a id="fallbackLink" class="button" href="https://www.google.com/maps/search/?api=1&query=74192%20Q%20Rd%2C%20Holdrege%2C%20NE%2068949">Open directions</a>
-      <a id="googleLink" class="button secondary" href="https://www.google.com/maps/search/?api=1&query=74192%20Q%20Rd%2C%20Holdrege%2C%20NE%2068949">Google Maps</a>
-      <a id="appleLink" class="button secondary" href="https://maps.apple.com/?q=74192%20Q%20Rd%2C%20Holdrege%2C%20NE%2068949">Apple Maps</a>
+      <a id="fallbackLink" class="button" href="https://www.google.com/maps/dir/?api=1&destination=40.581321427289%2C-99.323015533602">Open directions</a>
+      <a id="googleLink" class="button secondary" href="https://www.google.com/maps/dir/?api=1&destination=40.581321427289%2C-99.323015533602">Google Maps</a>
+      <a id="appleLink" class="button secondary" href="https://maps.apple.com/?daddr=40.581321427289%2C-99.323015533602">Apple Maps</a>
     </div>
     <p class="small">If nothing happens automatically, tap the button.</p>
     <noscript class="small">JavaScript is required for automatic routing.</noscript>
@@ -120,7 +120,9 @@
   <script>
     const DEFAULT_DESTINATION = {
       name: "Gardens on Q",
-      query: "Gardens on Q, 74192 Q Rd, Holdrege, NE 68949"
+      query: "74192 Q Rd, Holdrege, NE 68949",
+      lat: 40.581321427289,
+      lng: -99.323015533602
     };
 
     function getDestination() {
@@ -144,7 +146,7 @@
         return { name: name || query, query, lat: null, lng: null };
       }
 
-      return { ...DEFAULT_DESTINATION, lat: null, lng: null };
+      return { ...DEFAULT_DESTINATION };
     }
 
     function getMapUrls(destination) {
@@ -173,9 +175,8 @@
 
     const destinationName = document.getElementById("destinationName");
     const destinationSubtitleText = document.getElementById("destinationSubtitle");
-    const destinationSubtitle = Number.isFinite(destination.lat) && Number.isFinite(destination.lng)
-      ? `${destination.lat}, ${destination.lng}`
-      : destination.query;
+    const destinationSubtitle = destination.query
+      || `${destination.lat}, ${destination.lng}`;
     destinationName.textContent = destination.name;
     destinationSubtitleText.textContent = destinationSubtitle;
 
