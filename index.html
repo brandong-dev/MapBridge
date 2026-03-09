@@ -165,9 +165,12 @@
         const nameSlug = encodeURIComponent(destination.name.trim()).replace(/%20/g, "+");
         const zoom = 20;
         return {
-          apple: hasName
+          appleWeb: hasName
             ? `https://maps.apple.com/?q=${encodeURIComponent(destination.name)}&ll=${encodeURIComponent(coordinatePair)}`
             : `https://maps.apple.com/?q=${encodeURIComponent(coordinatePair)}`,
+          appleApp: hasName
+            ? `maps://?q=${encodeURIComponent(destination.name)}&ll=${encodeURIComponent(coordinatePair)}`
+            : `maps://?q=${encodeURIComponent(coordinatePair)}`,
           google: hasName
             ? `https://www.google.com/maps/place/${nameSlug}/@${coordinatePair},${zoom}z`
             : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordinatePair)}`
@@ -176,7 +179,8 @@
 
       const encodedQuery = encodeURIComponent(destination.query);
       return {
-        apple: `https://maps.apple.com/?q=${encodedQuery}`,
+        appleWeb: `https://maps.apple.com/?q=${encodedQuery}`,
+        appleApp: `maps://?q=${encodedQuery}`,
         google: `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`
       };
     }
@@ -198,7 +202,7 @@
 
     let targetUrl = urls.google;
     if (isIOS) {
-      targetUrl = urls.apple;
+      targetUrl = urls.appleApp;
     }
 
     const fallbackLink = document.getElementById("fallbackLink");
@@ -209,9 +213,19 @@
       ? "Open in Apple Maps"
       : (isAndroid ? "Open in Google Maps" : "Open directions");
     googleLink.href = urls.google;
-    appleLink.href = urls.apple;
+    appleLink.href = isIOS ? urls.appleApp : urls.appleWeb;
 
     function redirectToPreferredMap() {
+      if (isIOS) {
+        window.location.href = urls.appleApp;
+        window.setTimeout(() => {
+          if (!document.hidden) {
+            window.location.replace(urls.appleWeb);
+          }
+        }, 800);
+        return;
+      }
+
       window.location.replace(targetUrl);
     }
 
