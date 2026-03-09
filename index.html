@@ -218,11 +218,6 @@
     function redirectToPreferredMap() {
       if (isIOS) {
         window.location.href = urls.appleApp;
-        window.setTimeout(() => {
-          if (!document.hidden) {
-            window.location.replace(urls.appleWeb);
-          }
-        }, 800);
         return;
       }
 
