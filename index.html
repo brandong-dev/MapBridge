@@ -109,8 +109,8 @@
       <span id="destinationSubtitle">74192 Q Rd, Holdrege, NE 68949</span>
     </p>
     <div class="button-row">
-      <a id="fallbackLink" class="button" href="https://www.google.com/maps/dir/?api=1&destination=40.581321427289%2C-99.323015533602">Open directions</a>
-      <a id="googleLink" class="button secondary" href="https://www.google.com/maps/dir/?api=1&destination=40.581321427289%2C-99.323015533602">Google Maps</a>
+      <a id="fallbackLink" class="button" href="https://www.google.com/maps/search/?api=1&query=40.581321427289%2C-99.323015533602">Open directions</a>
+      <a id="googleLink" class="button secondary" href="https://www.google.com/maps/search/?api=1&query=40.581321427289%2C-99.323015533602">Google Maps</a>
       <a id="appleLink" class="button secondary" href="https://maps.apple.com/?daddr=40.581321427289%2C-99.323015533602">Apple Maps</a>
     </div>
     <p class="small">If nothing happens automatically, tap the button.</p>
@@ -152,21 +152,16 @@
     function getMapUrls(destination) {
       if (Number.isFinite(destination.lat) && Number.isFinite(destination.lng)) {
         const coordinatePair = `${destination.lat},${destination.lng}`;
-        const labeledGeoQuery = destination.name
-          ? `${coordinatePair} (${destination.name})`
-          : coordinatePair;
         return {
           apple: `https://maps.apple.com/?daddr=${encodeURIComponent(coordinatePair)}`,
-          google: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(coordinatePair)}`,
-          geo: `geo:0,0?q=${encodeURIComponent(labeledGeoQuery)}`
+          google: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordinatePair)}`
         };
       }
 
       const encodedQuery = encodeURIComponent(destination.query);
       return {
         apple: `https://maps.apple.com/?daddr=${encodedQuery}`,
-        google: `https://www.google.com/maps/dir/?api=1&destination=${encodedQuery}`,
-        geo: `geo:0,0?q=${encodedQuery}`
+        google: `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`
       };
     }
 
@@ -194,21 +189,13 @@
     const googleLink = document.getElementById("googleLink");
     const appleLink = document.getElementById("appleLink");
     fallbackLink.href = targetUrl;
-    fallbackLink.textContent = isIOS ? "Open in Apple Maps" : "Open directions";
+    fallbackLink.textContent = isIOS
+      ? "Open in Apple Maps"
+      : (isAndroid ? "Open in Google Maps" : "Open directions");
     googleLink.href = urls.google;
     appleLink.href = urls.apple;
 
     function redirectToPreferredMap() {
-      if (isAndroid) {
-        window.location.href = urls.geo;
-        window.setTimeout(() => {
-          if (!document.hidden) {
-            window.location.replace(urls.google);
-          }
-        }, 700);
-        return;
-      }
-
       window.location.replace(targetUrl);
     }
 
