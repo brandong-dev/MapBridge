@@ -200,20 +200,27 @@
     const isIOS = /iPhone|iPad|iPod/i.test(ua)
       || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-    let targetUrl = urls.google;
-    if (isIOS) {
-      targetUrl = urls.appleApp;
-    }
+    const primaryProvider = isIOS ? "apple" : "google";
+    const targetUrl = primaryProvider === "apple" ? urls.appleApp : urls.google;
 
     const fallbackLink = document.getElementById("fallbackLink");
     const googleLink = document.getElementById("googleLink");
     const appleLink = document.getElementById("appleLink");
     fallbackLink.href = targetUrl;
-    fallbackLink.textContent = isIOS
+    fallbackLink.textContent = primaryProvider === "apple"
       ? "Open in Apple Maps"
-      : (isAndroid ? "Open in Google Maps" : "Open directions");
+      : "Open in Google Maps";
     googleLink.href = urls.google;
     appleLink.href = isIOS ? urls.appleApp : urls.appleWeb;
+
+    // Avoid showing duplicate actions for the same map provider.
+    if (primaryProvider === "apple") {
+      appleLink.hidden = true;
+      googleLink.hidden = false;
+    } else {
+      googleLink.hidden = true;
+      appleLink.hidden = false;
+    }
 
     function redirectToPreferredMap() {
       if (isIOS) {
