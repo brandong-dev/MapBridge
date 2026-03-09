@@ -129,8 +129,10 @@
       const params = new URLSearchParams(window.location.search);
       const name = (params.get("name") || "").trim();
       const query = (params.get("q") || "").trim();
-      const lat = Number(params.get("lat"));
-      const lng = Number(params.get("lng"));
+      const latParam = params.get("lat");
+      const lngParam = params.get("lng");
+      const lat = latParam === null ? NaN : Number(latParam);
+      const lng = lngParam === null ? NaN : Number(lngParam);
       const hasCoords = Number.isFinite(lat) && Number.isFinite(lng);
 
       if (hasCoords) {
