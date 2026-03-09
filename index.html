@@ -215,11 +215,11 @@
 
     // Avoid showing duplicate actions for the same map provider.
     if (primaryProvider === "apple") {
-      appleLink.hidden = true;
-      googleLink.hidden = false;
+      appleLink.style.display = "none";
+      googleLink.style.display = "inline-block";
     } else {
-      googleLink.hidden = true;
-      appleLink.hidden = false;
+      googleLink.style.display = "none";
+      appleLink.style.display = "inline-block";
     }
 
     function redirectToPreferredMap() {
