@@ -1,0 +1,29 @@
+project_id = "MapBridge"
+
+[auth]
+site_url = "https://navqr.app"
+additional_redirect_urls = [
+  "https://navqr.app/auth/callback",
+  "https://navqr.vercel.app/auth/callback",
+  "https://navqr-6nopxjx5c-byt-studios.vercel.app/auth/callback",
+  "http://localhost:5173/auth/callback",
+  "http://localhost:4173/auth/callback"
+]
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+max_frequency = "1m0s"
+otp_length = 8
+
+[auth.mfa]
+max_enrolled_factors = 10
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
